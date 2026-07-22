@@ -1,0 +1,8 @@
+read_liberty -lib {LIB}
+read -sv {FA_HA_DIR}/*.v
+read -sv {RTL_PATH}/*.v
+synth -top {MUL_NAME}
+flatten
+opt
+abc -D {DELAY} -constr ./abc_constr -liberty {LIB}
+write_verilog ./netlist.v

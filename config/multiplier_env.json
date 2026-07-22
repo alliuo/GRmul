@@ -1,0 +1,16 @@
+{
+  "reward_scale": 100,
+  "target_delays": [50, 5000],
+  "area_delay_rate": [0.5, 1],
+  "reference_metric_comment": "Metrics of Wallace tree multipliers.",
+  "reference_metric": [
+    {"bw0": 4, "bw1": 4, "encoding": "no", "area": 127.0, "delay": 0.50805},
+    {"bw0": 4, "bw1": 4, "encoding": "b4u", "area": 127.0, "delay": 0.50805},
+    {"bw0": 8, "bw1": 8, "encoding": "no", "area": 438.5, "delay": 0.7499},
+    {"bw0": 8, "bw1": 8, "encoding": "b4u", "area": 483.5, "delay": 0.7995},
+    {"bw0": 12, "bw1": 12, "encoding": "no", "area": 964.0, "delay": 1.23555},
+    {"bw0": 12, "bw1": 12, "encoding": "b4u", "area": 964.0, "delay": 1.23555},
+    {"bw0": 16, "bw1": 16, "encoding": "no", "area": 2064.5, "delay": 1.33},
+    {"bw0": 16, "bw1": 16, "encoding": "b4u", "area": 1843.25, "delay": 1.3416}
+  ]
+}

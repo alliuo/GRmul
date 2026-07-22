@@ -1,0 +1,8 @@
+{
+  "tools": {
+    "yosys": "yosys",
+    "iverilog": "iverilog",
+    "vvp": "vvp",
+    "openroad": "openroad"
+  }
+}
