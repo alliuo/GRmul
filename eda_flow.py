@@ -6,6 +6,11 @@ import numpy as np
 from eda_tools import openroad_command, run_checked, run_logged, tool_path
 
 
+def pp_ref(pp):
+    name = pp.name.replace('*', '_')
+    return f'~{name}' if pp.node_type == 2 else name
+
+
 def code_full_adder(output_dir, fa_name, uncared_inputs):
     code = f"""
 module {fa_name} (
@@ -166,7 +171,7 @@ def code_mul(output_dir, bw0, bw1, encoding, pp_dict, fa_dict, ha_dict):
             code += f"    assign {pp.name} = 1'b1;\n"
         elif at_first_level and at_last_level: 
             # The initial PP is directly connected to the multiplier output.
-            code += f"    assign product[{pp.weight}] = {pp.name.replace('*', '_')};\n"
+            code += f"    assign product[{pp.weight}] = {pp_ref(pp)};\n"
         elif (not at_first_level) and (not at_last_level):
             # Declare the intermediate PP.
             code += f"    wire {pp.name};\n"
@@ -182,10 +187,10 @@ def code_mul(output_dir, bw0, bw1, encoding, pp_dict, fa_dict, ha_dict):
                 tmp_cin = None
             else: # Full adder.
                 current_adder = fa_dict[start_pp.graph_idx]
-                tmp_cin = start_pp.parents[2].name.replace('*', '_')
+                tmp_cin = pp_ref(start_pp.parents[2])
             tmp_adders = [current_adder.name]
-            tmp_input0 = [start_pp.parents[0].name.replace('*', '_')]
-            tmp_input1 = [start_pp.parents[1].name.replace('*', '_')]
+            tmp_input0 = [pp_ref(start_pp.parents[0])]
+            tmp_input1 = [pp_ref(start_pp.parents[1])]
             sum_name = current_adder.sum.name if current_adder.sum.children != [] else f"product[{current_adder.sum.weight}]"
             tmp_output = [sum_name]
             tmp_delete = []
@@ -209,10 +214,10 @@ def code_mul(output_dir, bw0, bw1, encoding, pp_dict, fa_dict, ha_dict):
                 tmp_adders.append(current_adder.name)
                 other_inputs = [p for p in pp.parents if p != carry]
                 if is_fa:
-                    tmp_input0.append(other_inputs[0].name.replace('*', '_'))
-                    tmp_input1.append(other_inputs[1].name.replace('*', '_'))
+                    tmp_input0.append(pp_ref(other_inputs[0]))
+                    tmp_input1.append(pp_ref(other_inputs[1]))
                 else:
-                    tmp_input0.append(other_inputs[0].name.replace('*', '_'))
+                    tmp_input0.append(pp_ref(other_inputs[0]))
                     tmp_input1.append("1'b0")
                 sum_name = current_adder.sum.name if current_adder.sum.children != [] else f"product[{current_adder.sum.weight}]"
                 tmp_output.append(sum_name)
@@ -274,13 +279,7 @@ def code_mul(output_dir, bw0, bw1, encoding, pp_dict, fa_dict, ha_dict):
             fa_type = fa.type
             input_idx = fa.input_order
         # Input names.
-        inputs = []
-        for input_pp in [fa.input0, fa.input1, fa.input2]:
-            input_name = input_pp.name.replace('*', '_')
-            if input_pp.node_type == 2:
-                inputs.append('~' + input_name) # Invert the input.
-            else:
-                inputs.append(input_name)
+        inputs = [pp_ref(pp) for pp in (fa.input0, fa.input1, fa.input2)]
         # Output names.
         if fa.sum.children != []: # Not a multiplier output.
             sum = fa.sum.name
@@ -327,13 +326,7 @@ def code_mul(output_dir, bw0, bw1, encoding, pp_dict, fa_dict, ha_dict):
             ha_type = ha.type
             input_idx = ha.input_order
         # Input names.
-        inputs = []
-        for input_pp in [ha.input0, ha.input1]:
-            input_name = input_pp.name.replace('*', '_')
-            if input_pp.node_type == 2:
-                inputs.append('~' + input_name) # Invert the input.
-            else:
-                inputs.append(input_name)
+        inputs = [pp_ref(pp) for pp in (ha.input0, ha.input1)]
         # Output names.
         if ha.sum.children != []: # Not a multiplier output.
             sum = ha.sum.name
