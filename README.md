@@ -39,6 +39,10 @@ matplotlib: 3.9.4
 The EDA flow requires Yosys, OpenROAD, Icarus Verilog, and VVP. Tool commands
 are configured in `config/eda_tools.json`.
 
+The tested remote environment used Yosys 0.47+211 (git `fa0c31186`),
+Yosys-ABC 1.01 (compiled 2024-12-07), and the OpenROAD Conda package
+`2.0_3175_gf12e2f474` (commit `f12e2f474102bfb875eeee57fb610d7d7de17770`).
+
 The flow uses the Nangate45 Liberty/LEF files in `lib/` for synthesis, timing
 evaluation, and simulation support.
 
